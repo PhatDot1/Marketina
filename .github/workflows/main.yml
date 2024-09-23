@@ -28,4 +28,4 @@ jobs:
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         OPENAI_ORGANIZATION_ID: ${{ secrets.OPENAI_ORGANIZATION_ID }}
       run: |
-        python your_script_name.py
+        python Deliverable_get_initiative.py
