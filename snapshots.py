@@ -27,7 +27,6 @@ day_to_field = {
     'Sunday': '📸 SUN'
 }
 
-# Function to get the current # Reg/App value from the specific view
 def get_reg_app_value():
     response = requests.get(AIRTABLE_URL, headers=HEADERS)
     if response.status_code == 200:
@@ -38,6 +37,9 @@ def get_reg_app_value():
 
 # Function to update the respective day's field
 def update_day_field(day_field, reg_app_value, record_id):
+    if isinstance(reg_app_value, str):
+        reg_app_value = float(reg_app_value)  # Ensure the value is a number
+
     data = {
         "records": [
             {
