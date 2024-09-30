@@ -24,6 +24,6 @@ jobs:
           pip install requests
 
       - name: Run Airtable update script
-        run: python airtable_update.py
+        run: python snapshots.py
         env:
           AIRTABLE_API_KEY: ${{ secrets.AIRTABLE_API_KEY }}
