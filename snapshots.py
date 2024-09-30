@@ -38,28 +38,35 @@ def get_records():
 
 # Function to update the respective day's field for each record
 def update_day_field(day_field, reg_app_value, record_id):
-    try:
-        reg_app_value = int(reg_app_value)  # Ensure the value is an integer (assuming it's whole numbers)
-    except ValueError:
-        print(f"Invalid value for # Reg/App: {reg_app_value}")
-        return
+    # Handle cases where reg_app_value is a list
+    if isinstance(reg_app_value, list):
+        reg_app_value = reg_app_value[0] if reg_app_value else None  # Use the first item if available
+    
+    if reg_app_value is not None:
+        try:
+            reg_app_value = int(reg_app_value)  # Ensure the value is an integer (assuming it's whole numbers)
+        except ValueError:
+            print(f"Invalid value for # Reg/App: {reg_app_value}")
+            return
 
-    data = {
-        "records": [
-            {
-                "id": record_id,  # The specific record ID to update
-                "fields": {
-                    day_field: reg_app_value
+        data = {
+            "records": [
+                {
+                    "id": record_id,  # The specific record ID to update
+                    "fields": {
+                        day_field: reg_app_value
+                    }
                 }
-            }
-        ]
-    }
+            ]
+        }
 
-    response = requests.patch(AIRTABLE_URL, json=data, headers=HEADERS)
-    if response.status_code == 200:
-        print(f"Updated {day_field} with {reg_app_value} for record {record_id}")
+        response = requests.patch(AIRTABLE_URL, json=data, headers=HEADERS)
+        if response.status_code == 200:
+            print(f"Updated {day_field} with {reg_app_value} for record {record_id}")
+        else:
+            print(f"Failed to update {day_field} for record {record_id}. Response: {response.content}")
     else:
-        print(f"Failed to update {day_field} for record {record_id}. Response: {response.content}")
+        print(f"No valid # Reg/App value to update for record {record_id}")
 
 def main():
     records = get_records()
