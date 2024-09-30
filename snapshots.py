@@ -18,8 +18,8 @@ today = datetime.now().strftime('%A')  # E.g., 'Monday', 'Tuesday'
 
 # Map days of the week to Airtable fields
 day_to_field = {
-    'Monday': '📸 MON',
-    'Tuesday': '📸 TUE',
+    'Monday': 'temp-test',
+    'Tuesday': 'temp-test1',
     'Wednesday': '📸 WED',
     'Thursday': '📸 THU',
     'Friday': '📸 FRI',
