@@ -27,18 +27,22 @@ day_to_field = {
     'Sunday': '📸 SUN'
 }
 
-def get_reg_app_value():
+# Function to get all records in the specified view
+def get_records():
     response = requests.get(AIRTABLE_URL, headers=HEADERS)
     if response.status_code == 200:
-        records = response.json().get('records', [])
-        if records:
-            return records[0]['fields'].get('# Reg/App')
-    return None
+        return response.json().get('records', [])
+    else:
+        print(f"Failed to fetch records. Response: {response.content}")
+        return []
 
-# Function to update the respective day's field
+# Function to update the respective day's field for each record
 def update_day_field(day_field, reg_app_value, record_id):
-    if isinstance(reg_app_value, str):
-        reg_app_value = float(reg_app_value)  # Ensure the value is a number
+    try:
+        reg_app_value = int(reg_app_value)  # Ensure the value is an integer (assuming it's whole numbers)
+    except ValueError:
+        print(f"Invalid value for # Reg/App: {reg_app_value}")
+        return
 
     data = {
         "records": [
@@ -50,6 +54,7 @@ def update_day_field(day_field, reg_app_value, record_id):
             }
         ]
     }
+
     response = requests.patch(AIRTABLE_URL, json=data, headers=HEADERS)
     if response.status_code == 200:
         print(f"Updated {day_field} with {reg_app_value} for record {record_id}")
@@ -57,24 +62,21 @@ def update_day_field(day_field, reg_app_value, record_id):
         print(f"Failed to update {day_field} for record {record_id}. Response: {response.content}")
 
 def main():
-    response = requests.get(AIRTABLE_URL, headers=HEADERS)
-    if response.status_code == 200:
-        records = response.json().get('records', [])
-        if records:
-            reg_app_value = records[0]['fields'].get('# Reg/App')
-            record_id = records[0]['id']
-            if reg_app_value is not None:
-                day_field = day_to_field.get(today)
-                if day_field:
+    records = get_records()
+    if records:
+        day_field = day_to_field.get(today)
+        if day_field:
+            for record in records:
+                reg_app_value = record['fields'].get('# Reg/App')
+                record_id = record['id']
+                if reg_app_value is not None:
                     update_day_field(day_field, reg_app_value, record_id)
                 else:
-                    print(f"Today is {today}, no matching field to update.")
-            else:
-                print("Could not retrieve # Reg/App value.")
+                    print(f"No # Reg/App value for record {record_id}")
         else:
-            print("No records found in the specified view.")
+            print(f"Today is {today}, no matching field to update.")
     else:
-        print(f"Failed to fetch records. Response: {response.content}")
+        print("No records found in the specified view.")
 
 if __name__ == '__main__':
     main()
