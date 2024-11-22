@@ -2,7 +2,7 @@ name: Update Airtable with # Reg/App
 
 on:
   schedule:
-    - cron: "0 8 * * *"  # Runs at 8:00 AM every day
+    - cron: "0 8 * * *"  # Runs at 8:00 AM every day hi
   workflow_dispatch:  
 
 jobs:
