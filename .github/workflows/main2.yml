@@ -2,7 +2,7 @@ name: Run Python Script Every 6 Minutes Starting 2 Minutes Past Midnight
 
 on:
   schedule:
-    - cron: '2-59/6 * * * *'
+    - cron: '2-59/6 * * * *' # hi
 
 jobs:
   run-script:
